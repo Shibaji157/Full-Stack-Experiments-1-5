@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experiment 5.1 - User Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>Experiment 5.1</h1>
+        <p>REST API User Management System</p>
+    </header>
+
+    <section class="card">
+        <h2>Add / Update User</h2>
+
+        <form id="userForm">
+
+            <label for="uid">UID</label>
+            <input type="text" id="uid" placeholder="Enter UID" required>
+
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Enter Name" required>
+
+            <button type="submit">Add User</button>
+        </form>
+
+        <p id="message"></p>
+    </section>
+
+    <section class="card">
+        <div class="table-header">
+            <h2>User Records</h2>
+            <button id="refreshBtn">Refresh</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>UID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="userTableBody"></tbody>
+        </table>
+    </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

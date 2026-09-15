@@ -1,0 +1,62 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef2ff;
+}
+
+.App {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Student Details */
+.student-info {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  text-align: left;
+}
+
+.student-info h3 {
+  margin: 5px 0;
+  color: #4f46e5;
+  font-size: 18px;
+}
+
+h1 {
+  color: #4f46e5;
+  margin-bottom: 20px;
+}
+
+.fc {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+
+.fc-toolbar-title {
+  color: #4f46e5;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.fc-button {
+  background: #4f46e5 !important;
+  border: none !important;
+}
+
+.fc-button:hover {
+  background: #4338ca !important;
+}
+
+.fc-daygrid-event {
+  background: #4f46e5;
+  border: none;
+}

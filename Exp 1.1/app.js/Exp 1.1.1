@@ -1,0 +1,40 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+const { validatePost } = require("./validation");
+
+const app = express();
+app.use(bodyParser.json());
+
+app.post("/api/post", (req, res) => {
+  const { platform, content } = req.body;
+  const validationResult = validatePost(platform, content);
+
+  if (!validationResult.valid) {
+    return res.status(400).json({ error: validationResult.message });
+  }
+
+  // Simulate saving post
+  res.json({ success: true, message: `Post sent to ${platform}!` });
+});
+
+app.listen(5000, () => {
+  console.log("Backend running on http://localhost:5000");
+});
+function validatePost(platform, content) {
+  if (!platform) return { valid: false, message: "Platform is required." };
+  if (!content || content.trim().length === 0) {
+    return { valid: false, message: "Content cannot be empty." };
+  }
+
+  // Example constraints
+  if (platform === "Twitter" && content.length > 280) {
+    return { valid: false, message: "Twitter posts must be ≤ 280 chars." };
+  }
+  if (platform === "LinkedIn" && content.length > 1300) {
+    return { valid: false, message: "LinkedIn posts must be ≤ 1300 chars." };
+  }
+
+  return { valid: true };
+}
+
+module.exports = { validatePost };

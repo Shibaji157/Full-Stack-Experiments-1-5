@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experiment 5.2 - User Management</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #f2f2f2;
+        }
+
+        #message {
+            margin: 15px 0;
+            padding: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Experiment 5.2</h1>
+<h2>Global Exception Handling & Structured Logging</h2>
+
+<h3>User Management</h3>
+
+<input id="uid" placeholder="UID">
+<input id="name" placeholder="Name">
+
+<br>
+
+<button onclick="addUser()">Add User</button>
+<button onclick="updateUser()">Update User</button>
+<button onclick="clearForm()">Clear</button>
+
+<hr>
+
+<h3>Search User</h3>
+
+<input id="searchUid" placeholder="Enter UID">
+<button onclick="searchUser()">Search</button>
+<button onclick="loadUsers()">Refresh</button>
+
+<div id="message"></div>
+
+<table>
+    <thead>
+        <tr>
+            <th>UID</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody id="userTable"></tbody>
+</table>
+
+<script>
+
+const API_URL = "http://localhost:8080/api/users";
+
+async function loadUsers() {
+    const response = await fetch(API_URL);
+    const result = await response.json();
+
+    const table = document.getElementById("userTable");
+    table.innerHTML = "";
+
+    result.data.forEach(user => {
+        table.innerHTML += `
+            <tr>
+                <td>${user.uid}</td>
+                <td>${user.name}</td>
+                <td>
+                    <button onclick="editUser('${user.uid}','${user.name}')">Edit</button>
+                    <button onclick="deleteUser('${user.uid}')">Delete</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+async function addUser() {
+
+    const uid = document.getElementById("uid").value;
+    const name = document.getElementById("name").value;
+
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({uid, name})
+    });
+
+    const result = await response.json();
+
+    showMessage(result.message);
+
+    if (result.success) {
+        clearForm();
+        loadUsers();
+    }
+}
+
+function editUser(uid, name) {
+    document.getElementById("uid").value = uid;
+    document.getElementById("name").value = name;
+}
+
+async function updateUser() {
+
+    const uid = document.getElementById("uid").value;
+    const name = document.getElementById("name").value;
+
+    const response = await fetch(`${API_URL}/${uid}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({uid, name})
+    });
+
+    const result = await response.json();
+
+    showMessage(result.message);
+    loadUsers();
+}
+
+async function deleteUser(uid) {
+
+    const response = await fetch(`${API_URL}/${uid}`, {
+        method: "DELETE"
+    });
+
+    const result = await response.json();
+
+    showMessage(result.message);
+    loadUsers();
+}
+
+async function searchUser() {
+
+    const uid = document.getElementById("searchUid").value;
+
+    const response = await fetch(`${API_URL}/${uid}`);
+    const result = await response.json();
+
+    showMessage(result.message);
+
+    const table = document.getElementById("userTable");
+    table.innerHTML = "";
+
+    if (result.success) {
+        table.innerHTML = `
+            <tr>
+                <td>${result.data.uid}</td>
+                <td>${result.data.name}</td>
+                <td>
+                    <button onclick="editUser('${result.data.uid}','${result.data.name}')">
+                        Edit
+                    </button>
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function clearForm() {
+    document.getElementById("uid").value = "";
+    document.getElementById("name").value = "";
+}
+
+function showMessage(message) {
+    document.getElementById("message").innerText = message;
+}
+
+loadUsers();
+
+</script>
+
+</body>
+</html>
